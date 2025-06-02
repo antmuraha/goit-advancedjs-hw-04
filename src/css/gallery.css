@@ -1,0 +1,94 @@
+@import 'simplelightbox/dist/simple-lightbox.min.css';
+
+.gallery {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  list-style: none;
+  max-width: 1128px;
+  margin: 0 auto;
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+.gallery.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.gallery-image {
+  width: 33vw;
+  height: fit-content;
+  min-height: 200px;
+  max-width: 360px;
+  max-height: 200px;
+  object-fit: cover;
+}
+
+.gallery-link {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  outline: 1px solid #808080;
+}
+
+.gallery-item-meta {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 4px 20px;
+  font-size: 12px;
+  line-height: 24px;
+  letter-spacing: 0.48px;
+  background: #fff;
+}
+
+.gallery-item-meta > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gallery-item-meta .title {
+  font-weight: 600;
+  line-height: 16px;
+}
+
+.basicLightbox {
+  background: rgba(46, 47, 66, 0.8);
+}
+
+.lightbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lightbox-image {
+  height: calc(100vh - 56px);
+  opacity: 1;
+  transition:
+    transform 0.5s ease-in-out,
+    opacity 0.5s ease-in-out;
+}
+
+/* Lightbox customization */
+.sl-wrapper {
+  background-color: rgba(46, 47, 66, 0.8);
+}
+
+.sl-wrapper .sl-close,
+.sl-wrapper .sl-counter,
+.sl-wrapper .sl-navigation button {
+  color: white;
+}
+
+.sl-spinner {
+  border: 5px solid white;
+}
