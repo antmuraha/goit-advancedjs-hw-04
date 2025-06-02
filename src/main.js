@@ -6,6 +6,7 @@ import {
   renderGallery,
   renderLoader,
 } from './js/render-functions.js';
+import scrollToTile from './js/scrollToTile.js';
 
 iziToast.settings({
   position: 'topRight',
@@ -119,6 +120,7 @@ state.subscribe('images', (images, { loading, page }) =>
         }
 
         state.setState('images', [...state.getState('images'), ...data.hits]);
+        scrollToTile(data.hits[0]?.id);
       })
       .catch(error => {
         console.error('Error fetching more images:', error);
