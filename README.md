@@ -1,7 +1,7 @@
 ## Live Demo
 
 You can view the live version of the tasks here:  
-[Live Demo](https://antmuraha.github.io/goit-advancedjs-hw-03/)
+[Live Demo](https://antmuraha.github.io/goit-advancedjs-hw-04/)
 
 ## API Usage
 
