@@ -5,7 +5,6 @@
 }
 
 .loader {
-  position: absolute;
   top: var(--size);
   opacity: 1;
   transform: rotateZ(45deg);

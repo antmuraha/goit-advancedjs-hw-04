@@ -10,10 +10,20 @@ export function renderLoader(loading) {
   return loaderElement;
 }
 
+export function renderButtonMore(images, loading, page) {
+  console.log('renderButtonMore called', { images, loading });
+  const buttonElement = document.querySelector('.button-load-more');
+  if (loading || images.length === 0 || page === -1) {
+    buttonElement?.classList.add('hidden');
+  } else {
+    buttonElement?.classList.remove('hidden');
+  }
+}
+
 export function renderGallery(images, loading) {
   const galleryEl = document.querySelector('.gallery');
 
-  if (loading) {
+  if (loading && !galleryEl.innerHTML) {
     galleryEl?.classList.add('hidden');
   } else {
     galleryEl?.classList.remove('hidden');

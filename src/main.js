@@ -1,7 +1,11 @@
 import iziToast from 'izitoast';
 import FlatStateManager from './js/FlatStateManager.js';
 import fetchPixabayImages from './js/pixabay-api.js';
-import { renderGallery, renderLoader } from './js/render-functions.js';
+import {
+  renderButtonMore,
+  renderGallery,
+  renderLoader,
+} from './js/render-functions.js';
 
 iziToast.settings({
   position: 'topRight',
@@ -30,7 +34,12 @@ function showSnackbar(message, type = 'success') {
   });
 }
 
-const state = new FlatStateManager({ loading: false, images: [], search: '' });
+const state = new FlatStateManager({
+  loading: false,
+  images: [],
+  page: 1,
+  search: '',
+});
 
 state.subscribe('loading', renderLoader);
 state.subscribe('loading', (loading, { images }) =>
@@ -39,8 +48,14 @@ state.subscribe('loading', (loading, { images }) =>
 state.subscribe('images', (images, { loading }) =>
   renderGallery(images, loading)
 );
+state.subscribe('loading', (loading, { images, page }) =>
+  renderButtonMore(images, loading, page)
+);
+state.subscribe('images', (images, { loading, page }) =>
+  renderButtonMore(images, loading, page)
+);
 
-function initializeForm() {
+(function initializeForm() {
   const formElement = document.querySelector('.form');
 
   formElement?.addEventListener('submit', event => {
@@ -58,10 +73,12 @@ function initializeForm() {
       return;
     }
 
-    state.setState('loading', true);
+    state.setState('images', []);
     state.setState('search', data.search);
+    state.setState('page', 1);
+    state.setState('loading', true);
 
-    fetchPixabayImages(data.search)
+    fetchPixabayImages(data.search, '1')
       .then(data => {
         if (data.hits.length === 0) {
           showSnackbar(
@@ -81,6 +98,34 @@ function initializeForm() {
         state.setState('loading', false);
       });
   });
-}
+})();
 
-initializeForm();
+(function initializeLoadMoreButton() {
+  const buttonElement = document.querySelector('.button-load-more');
+
+  buttonElement?.addEventListener('click', () => {
+    const searchQuery = state.getState('search');
+
+    state.setState('loading', true);
+    const page = state.getState('page') + 1;
+    state.setState('page', page);
+
+    fetchPixabayImages(searchQuery, page)
+      .then(data => {
+        if (data.hits.length === 0) {
+          showSnackbar(`No more images found for "${searchQuery}"`, 'error');
+          state.setState('page', -1);
+          return;
+        }
+
+        state.setState('images', [...state.getState('images'), ...data.hits]);
+      })
+      .catch(error => {
+        console.error('Error fetching more images:', error);
+        showSnackbar(`Error fetching more images`, 'error');
+      })
+      .finally(() => {
+        state.setState('loading', false);
+      });
+  });
+})();
