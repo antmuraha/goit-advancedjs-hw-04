@@ -1,6 +1,7 @@
 /*******************************************************************************************
  * WARNING! Do not use the API key openly, as it may be unsafe; only through a proxy server *
  *******************************************************************************************/
+import axios from 'axios';
 
 /**
  * Pixabay api doc https://pixabay.com/api/docs/
@@ -59,13 +60,9 @@ function fetchPixabayImages(search, page = '1') {
   // Using proxy server
   const url = `${baseUrl}?${queryParams}`;
 
-  return fetch(url)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Error fetching images: ${response.statusText}`);
-      }
-      return response.json();
-    })
+  return axios
+    .get(url)
+    .then(response => response.data)
     .catch(error => {
       // Processing the error
       // This could be a network error or an issue with the response
