@@ -42,7 +42,7 @@ const baseUrl =
  * @property {PixabayImage[]} hits - Array of image objects matching the query.
  */
 
-function fetchPixabayImages(search) {
+function fetchPixabayImages(search, page = '1') {
   const queryParams = new URLSearchParams({
     // See the warning above
     // key: process.env.PIXABAY_KEY,
@@ -50,8 +50,8 @@ function fetchPixabayImages(search) {
     image_type: 'photo',
     orientation: 'horizontal',
     safesearch: 'true',
-    per_page: '9',
-    page: '1', // Default to the first page
+    per_page: '15',
+    page,
   });
 
   // See the warning above
