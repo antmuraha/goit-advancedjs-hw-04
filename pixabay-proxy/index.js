@@ -1,7 +1,7 @@
 const API_KEY = process.env.PIXABAY_KEY;
 
 export const pixabayProxy = async (req, res) => {
-  res.set('Access-Control-Allow-Origin', 'https://antmuraha.github.io');
+  res.set('Access-Control-Allow-Origin', process.env.NODE_ENV === 'production' ? 'https://antmuraha.github.io' : '*');
   res.set('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.set('Access-Control-Allow-Headers', 'Content-Type');
 
