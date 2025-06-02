@@ -114,7 +114,7 @@ state.subscribe('images', (images, { loading, page }) =>
     fetchPixabayImages(searchQuery, page)
       .then(data => {
         if (data.hits.length === 0) {
-          showSnackbar(`No more images found for "${searchQuery}"`, 'error');
+          showSnackbar(`We're sorry, but you've reached the end of search results.`, 'error');
           state.setState('page', -1);
           return;
         }
