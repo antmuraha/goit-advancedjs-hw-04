@@ -43,7 +43,7 @@ const baseUrl =
  * @property {PixabayImage[]} hits - Array of image objects matching the query.
  */
 
-function fetchPixabayImages(search, page = '1') {
+async function fetchPixabayImages(search, page = '1') {
   const queryParams = new URLSearchParams({
     // See the warning above
     // key: process.env.PIXABAY_KEY,
@@ -60,16 +60,8 @@ function fetchPixabayImages(search, page = '1') {
   // Using proxy server
   const url = `${baseUrl}?${queryParams}`;
 
-  return axios
-    .get(url)
-    .then(response => response.data)
-    .catch(error => {
-      // Processing the error
-      // This could be a network error or an issue with the response
-      // Log the error to the console for debugging
-      console.error('Error:', error);
-      throw error;
-    });
+  const response = await axios.get(url);
+  return response.data;
 }
 
 export default fetchPixabayImages;

@@ -59,7 +59,7 @@ state.subscribe('images', (images, { loading, page }) =>
 (function initializeForm() {
   const formElement = document.querySelector('.form');
 
-  formElement?.addEventListener('submit', event => {
+  formElement?.addEventListener('submit', async event => {
     event.preventDefault();
     const formData = new FormData(formElement);
     const data = Object.fromEntries(formData.entries());
@@ -79,55 +79,53 @@ state.subscribe('images', (images, { loading, page }) =>
     state.setState('page', 1);
     state.setState('loading', true);
 
-    fetchPixabayImages(data.search, '1')
-      .then(data => {
-        if (data.hits.length === 0) {
-          showSnackbar(
-            `Sorry, there are no images matching your search query. Please try again!`,
-            'error'
-          );
-          return;
-        }
-
-        state.setState('images', data.hits);
-      })
-      .catch(error => {
-        console.error('Error fetching images:', error);
-        showSnackbar(`Error fetching images`, 'error');
-      })
-      .finally(() => {
-        state.setState('loading', false);
-      });
+    try {
+      const responseData = await fetchPixabayImages(data.search, '1');
+      if (responseData.hits.length === 0) {
+        showSnackbar(
+          `We're sorry, but you've reached the end of search results.`,
+          'error'
+        );
+      } else {
+        state.setState('images', responseData.hits);
+      }
+    } catch (error) {
+      console.error('Error fetching images:', error);
+      showSnackbar(`Error fetching images`, 'error');
+    }
+    state.setState('loading', false);
   });
 })();
 
 (function initializeLoadMoreButton() {
   const buttonElement = document.querySelector('.button-load-more');
 
-  buttonElement?.addEventListener('click', () => {
+  buttonElement?.addEventListener('click', async () => {
     const searchQuery = state.getState('search');
 
     state.setState('loading', true);
     const page = state.getState('page') + 1;
     state.setState('page', page);
 
-    fetchPixabayImages(searchQuery, page)
-      .then(data => {
-        if (data.hits.length === 0) {
-          showSnackbar(`We're sorry, but you've reached the end of search results.`, 'error');
-          state.setState('page', -1);
-          return;
-        }
-
-        state.setState('images', [...state.getState('images'), ...data.hits]);
-        scrollToTile(data.hits[0]?.id);
-      })
-      .catch(error => {
-        console.error('Error fetching more images:', error);
-        showSnackbar(`Error fetching more images`, 'error');
-      })
-      .finally(() => {
-        state.setState('loading', false);
-      });
+    try {
+      const responseData = await fetchPixabayImages(searchQuery, page);
+      if (responseData.hits.length === 0) {
+        showSnackbar(
+          `We're sorry, but you've reached the end of search results.`,
+          'error'
+        );
+        state.setState('page', -1);
+      } else {
+        state.setState('images', [
+          ...state.getState('images'),
+          ...responseData.hits,
+        ]);
+        scrollToTile(responseData.hits[0]?.id);
+      }
+    } catch (error) {
+      console.error('Error fetching images:', error);
+      showSnackbar(`Error fetching images`, 'error');
+    }
+    state.setState('loading', false);
   });
 })();
